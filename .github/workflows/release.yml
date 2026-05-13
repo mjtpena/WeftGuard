@@ -1,0 +1,51 @@
+name: Release WeftGuard
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      publish_marketplace:
+        description: Publish to VS Code Marketplace
+        required: true
+        default: 'false'
+        type: choice
+        options:
+          - 'false'
+          - 'true'
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run package
+      - uses: actions/upload-artifact@v4
+        with:
+          name: weftguard-vsix
+          path: weftguard-*.vsix
+
+  publish:
+    needs: package
+    if: github.event_name == 'push' || github.event.inputs.publish_marketplace == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npm run package
+      - name: Publish to VS Code Marketplace
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+        run: npx vsce publish --packagePath weftguard-*.vsix --pat "$VSCE_PAT"
