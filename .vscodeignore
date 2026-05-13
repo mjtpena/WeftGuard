@@ -1,0 +1,13 @@
+.vscode/**
+.vscode-test/**
+coverage/**
+node_modules/**
+src/**
+tests/**
+**/*.map
+*.vsix
+.eslintrc.json
+.gitignore
+PRODUCT_PLAN.md
+tsconfig.json
+vitest.config.*

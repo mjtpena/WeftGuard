@@ -1,0 +1,180 @@
+{
+  "name": "weftguard",
+  "displayName": "WeftGuard",
+  "description": "Microsoft Fabric ALM, deployment preflight, dependency graph, and release governance for VS Code.",
+  "version": "0.1.0",
+  "publisher": "deltalenz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjtpena/WeftGuard.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mjtpena/WeftGuard/issues"
+  },
+  "homepage": "https://github.com/mjtpena/WeftGuard#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Data Science",
+    "Other"
+  ],
+  "keywords": [
+    "Microsoft Fabric",
+    "Fabric",
+    "ALM",
+    "CI/CD",
+    "deployment",
+    "governance",
+    "OneLake",
+    "Power BI"
+  ],
+  "icon": "icon.png",
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onCommand:weftguard.scanCurrentProject",
+    "onCommand:weftguard.runDeploymentPreflight",
+    "onCommand:weftguard.buildDependencyGraph",
+    "onCommand:weftguard.exportReleaseReport",
+    "onCommand:weftguard.generateCICDPipeline",
+    "onCommand:weftguard.showDashboard",
+    "onView:weftguard.fabricItems"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "weftguard.scanCurrentProject",
+        "title": "WeftGuard: Scan Current Project",
+        "category": "WeftGuard"
+      },
+      {
+        "command": "weftguard.runDeploymentPreflight",
+        "title": "WeftGuard: Run Deployment Preflight",
+        "category": "WeftGuard"
+      },
+      {
+        "command": "weftguard.buildDependencyGraph",
+        "title": "WeftGuard: Build Dependency Graph",
+        "category": "WeftGuard"
+      },
+      {
+        "command": "weftguard.exportReleaseReport",
+        "title": "WeftGuard: Export Release Report",
+        "category": "WeftGuard"
+      },
+      {
+        "command": "weftguard.generateCICDPipeline",
+        "title": "WeftGuard: Generate CI/CD Pipeline",
+        "category": "WeftGuard"
+      },
+      {
+        "command": "weftguard.showDashboard",
+        "title": "WeftGuard: Show Dashboard",
+        "category": "WeftGuard"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "weftguard",
+          "title": "WeftGuard",
+          "icon": "static/media/weftguard-logo.svg"
+        }
+      ]
+    },
+    "views": {
+      "weftguard": [
+        {
+          "id": "weftguard.fabricItems",
+          "name": "Fabric Release Map",
+          "type": "tree"
+        }
+      ]
+    },
+    "menus": {
+      "view/title": [
+        {
+          "command": "weftguard.scanCurrentProject",
+          "when": "view == weftguard.fabricItems",
+          "group": "navigation"
+        },
+        {
+          "command": "weftguard.runDeploymentPreflight",
+          "when": "view == weftguard.fabricItems",
+          "group": "navigation"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "weftguard.scanCurrentProject"
+        },
+        {
+          "command": "weftguard.runDeploymentPreflight"
+        },
+        {
+          "command": "weftguard.buildDependencyGraph"
+        },
+        {
+          "command": "weftguard.exportReleaseReport"
+        },
+        {
+          "command": "weftguard.generateCICDPipeline"
+        },
+        {
+          "command": "weftguard.showDashboard"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "WeftGuard",
+      "properties": {
+        "weftguard.scan.include": {
+          "type": "array",
+          "default": [
+            "**/*.json",
+            "**/*.ipynb",
+            "**/*.py",
+            "**/*.sql",
+            "**/*.yml",
+            "**/*.yaml"
+          ],
+          "description": "File patterns WeftGuard considers when scanning local Fabric projects."
+        },
+        "weftguard.scan.exclude": {
+          "type": "array",
+          "default": [
+            "**/node_modules/**",
+            "**/.git/**",
+            "**/out/**",
+            "**/dist/**",
+            "**/.vscode-test/**"
+          ],
+          "description": "File patterns WeftGuard excludes from local scans."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "clean": "rimraf out coverage *.vsix",
+    "compile": "tsc -p ./",
+    "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
+    "test": "vitest run",
+    "build": "npm run compile && npm run lint && npm run test",
+    "package": "vsce package --no-dependencies",
+    "publish": "vsce publish --packagePath weftguard-0.1.0.vsix"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.9",
+    "@types/vscode": "^1.90.0",
+    "@typescript-eslint/eslint-plugin": "7.16.1",
+    "@typescript-eslint/parser": "7.16.1",
+    "@vscode/vsce": "^3.2.2",
+    "eslint": "8.57.0",
+    "rimraf": "^6.0.1",
+    "typescript": "5.5.4",
+    "vitest": "4.1.6"
+  },
+  "dependencies": {}
+}
