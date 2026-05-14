@@ -1,0 +1,5 @@
+{
+  "logicalId": "lakehouse-1",
+  "displayName": "Sales Lakehouse",
+  "type": "Lakehouse"
+}

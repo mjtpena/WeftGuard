@@ -1,6 +1,8 @@
 # WeftGuard
 
-**WeftGuard** is a VS Code extension for Microsoft Fabric teams who need code-first release confidence: workspace diffs, dependency graphs, deployment preflight checks, environment drift detection, and CI/CD scaffolding before changes hit production.
+**WeftGuard** is a VS Code extension for Microsoft Fabric teams who need code-first release confidence: dependency graphs, deployment preflight checks, environment drift detection, CI/CD scaffolding, and release evidence before changes hit production.
+
+![WeftGuard dashboard demo](docs/screenshots/weftguard-dashboard-demo.png)
 
 ## Features
 
@@ -11,6 +13,26 @@
 - Fabric release map tree view and polished dashboard webview.
 - CI/CD starter generator for GitHub Actions.
 - Release report export in Markdown and JSON.
+
+## What it does
+
+WeftGuard turns a local Fabric project folder into a release-readiness view:
+
+1. It scans Fabric item definitions such as `.platform`, JSON definitions, notebooks, SQL, Python, and YAML.
+2. It identifies Fabric items such as reports, semantic models, lakehouses, warehouses, notebooks, pipelines, shortcuts, and variable libraries.
+3. It infers dependency edges from explicit dependency metadata, GUID-like environment references, semantic model bindings, and `${VariableName}` references.
+4. It runs preflight rules for missing referenced items, hardcoded environment IDs, unresolved variables, direct-production-edit signals, and unknown item types.
+5. It publishes findings to the VS Code Problems panel, renders a dashboard, and exports Markdown/JSON release reports for pull requests or change reviews.
+
+## Evidence
+
+The demo screenshot above was generated from a sample Fabric project containing a report with:
+
+- a missing semantic model dependency,
+- a GUID-like environment reference,
+- and an unresolved `${ProdLakehouseId}` variable reference.
+
+The generated report is checked in at [`docs/evidence/release-report-demo.md`](docs/evidence/release-report-demo.md). The same behavior is covered by unit tests in `tests/core`.
 
 ## Installation
 
