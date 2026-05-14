@@ -43,6 +43,18 @@ Pipeline templates are included in:
 
 The VS Code command `WeftGuard: Generate CI/CD Pipeline` also writes GitHub Actions and Azure DevOps starter files into the current workspace.
 
+### PowerShell usage
+
+Fabric admins can also use the bundled PowerShell module:
+
+```powershell
+Import-Module .\powershell\WeftGuard\WeftGuard.psd1
+Invoke-WeftGuardPreflight -ProjectPath . -OutputPath .\weftguard-reports -FailOn Error
+New-WeftGuardPipelineTemplate -DestinationPath . -Platform Both -Force
+```
+
+`Invoke-WeftGuardPreflight` wraps the same headless CLI, writes Markdown/JSON reports, and throws on deployment-blocking findings by default so Azure DevOps and GitHub Actions jobs fail correctly.
+
 ## Evidence
 
 The live VS Code screenshot above was captured from the WeftGuard extension running against a sample Fabric project containing a report with:
@@ -67,6 +79,7 @@ code --install-extension .\weftguard-0.1.0.vsix
 
 ```powershell
 npm run build
+npm run test:powershell
 npm run test:vscode
 npm run package
 npm run preflight -- --project examples/demo-fabric-production --out weftguard-reports --fail-on never

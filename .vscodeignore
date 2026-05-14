@@ -3,6 +3,7 @@
 .github/**
 coverage/**
 node_modules/**
+weftguard-reports/**
 src/**
 tests/**
 **/*.map
