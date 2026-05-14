@@ -41,8 +41,9 @@ exports.run = async function run() {
   assert.match(markdown, /missing-model/);
   assert.match(markdown, /ProdLakehouseId/);
 
-  const workflowPath = path.join(workspacePath, '.github', 'workflows', 'weftguard-fabric-deploy.yml');
-  assert.ok(fs.existsSync(workflowPath), 'CI/CD workflow template should be generated.');
+    const workflowPath = path.join(workspacePath, '.github', 'workflows', 'weftguard-fabric-deploy.yml');
+    assert.ok(fs.existsSync(workflowPath), 'CI/CD workflow template should be generated.');
+    assert.ok(fs.existsSync(path.join(workspacePath, 'azure-pipelines-weftguard.yml')), 'Azure DevOps workflow template should be generated.');
 
   await vscode.commands.executeCommand('weftguard.showDashboard');
 

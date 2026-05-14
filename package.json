@@ -32,6 +32,9 @@
   ],
   "icon": "icon.png",
   "main": "./out/extension.js",
+  "bin": {
+    "weftguard": "./out/cli.js"
+  },
   "activationEvents": [
     "onCommand:weftguard.scanCurrentProject",
     "onCommand:weftguard.runDeploymentPreflight",
@@ -164,6 +167,8 @@
     "test:vscode": "node ./tests/vscode/runTest.js",
     "verify": "npm run build && npm run test:vscode && npm run package",
     "build": "npm run compile && npm run lint && npm run test",
+    "preflight": "node ./out/cli.js preflight",
+    "prepare": "npm run compile",
     "package": "vsce package --no-dependencies",
     "publish": "vsce publish --packagePath weftguard-0.1.0.vsix"
   },

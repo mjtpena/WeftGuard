@@ -1,0 +1,29 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '24.x'
+    displayName: Use Node.js 24
+  - script: npm install --no-save github:mjtpena/WeftGuard
+    displayName: Install WeftGuard
+  - script: npx weftguard preflight --project . --out weftguard-reports --fail-on error --format markdown,json
+    displayName: Run WeftGuard Fabric preflight
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    inputs:
+      PathtoPublish: weftguard-reports
+      ArtifactName: weftguard-reports
+      publishLocation: Container

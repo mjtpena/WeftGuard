@@ -110,10 +110,12 @@ async function generateCICDPipeline(): Promise<void> {
     const root = getWorkspaceRoot();
     const workflowFolder = vscode.Uri.joinPath(root, '.github', 'workflows');
     const workflowFile = vscode.Uri.joinPath(workflowFolder, 'weftguard-fabric-deploy.yml');
+    const azurePipelineFile = vscode.Uri.joinPath(root, 'azure-pipelines-weftguard.yml');
     await vscode.workspace.fs.createDirectory(workflowFolder);
     await vscode.workspace.fs.writeFile(workflowFile, Buffer.from(buildGitHubActionsWorkflow(), 'utf8'));
+    await vscode.workspace.fs.writeFile(azurePipelineFile, Buffer.from(buildAzurePipelinesWorkflow(), 'utf8'));
     await vscode.window.showTextDocument(workflowFile);
-    vscode.window.showInformationMessage('WeftGuard generated a Fabric deployment workflow template.');
+    vscode.window.showInformationMessage('WeftGuard generated GitHub Actions and Azure DevOps Fabric preflight templates.');
   });
 }
 
@@ -143,34 +145,70 @@ async function runCommand(failurePrefix: string, action: () => Promise<void>): P
 }
 
 function buildGitHubActionsWorkflow(): string {
-  return `name: WeftGuard Fabric Deployment
+  return `name: WeftGuard Fabric Preflight
 
 on:
-  workflow_dispatch:
   pull_request:
     paths:
       - '**/*.json'
       - '**/*.ipynb'
       - '**/*.sql'
       - '**/*.py'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/.platform'
+  workflow_dispatch:
 
 jobs:
-  preflight:
+  fabric-preflight:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-      - name: Install Fabric automation dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install ms-fabric-cli fabric-cicd
-      - name: Fabric authentication placeholder
-        run: |
-          echo "Configure service-principal authentication with repository secrets before deployment."
-      - name: Deployment gate
-        run: |
-          echo "Run WeftGuard preflight locally and attach the release report to this pull request."
+          node-version: 24
+      - name: Install WeftGuard
+        run: npm install --no-save github:mjtpena/WeftGuard
+      - name: Run WeftGuard preflight
+        run: npx weftguard preflight --project . --out weftguard-reports --fail-on error --format markdown,json
+      - name: Upload WeftGuard reports
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: weftguard-reports
+          path: weftguard-reports
+`;
+}
+
+function buildAzurePipelinesWorkflow(): string {
+  return `trigger:
+  branches:
+    include:
+      - main
+
+pr:
+  branches:
+    include:
+      - '*'
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - checkout: self
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '24.x'
+    displayName: Use Node.js 24
+  - script: npm install --no-save github:mjtpena/WeftGuard
+    displayName: Install WeftGuard
+  - script: npx weftguard preflight --project . --out weftguard-reports --fail-on error --format markdown,json
+    displayName: Run WeftGuard Fabric preflight
+  - task: PublishBuildArtifacts@1
+    condition: always()
+    inputs:
+      PathtoPublish: weftguard-reports
+      ArtifactName: weftguard-reports
+      publishLocation: Container
 `;
 }

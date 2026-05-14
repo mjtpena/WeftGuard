@@ -1,0 +1,32 @@
+name: WeftGuard Fabric Preflight
+
+on:
+  pull_request:
+    paths:
+      - '**/*.json'
+      - '**/*.ipynb'
+      - '**/*.sql'
+      - '**/*.py'
+      - '**/*.yml'
+      - '**/*.yaml'
+      - '**/.platform'
+  workflow_dispatch:
+
+jobs:
+  fabric-preflight:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+      - name: Install WeftGuard
+        run: npm install --no-save github:mjtpena/WeftGuard
+      - name: Run WeftGuard preflight
+        run: npx weftguard preflight --project . --out weftguard-reports --fail-on error --format markdown,json
+      - name: Upload WeftGuard reports
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: weftguard-reports
+          path: weftguard-reports

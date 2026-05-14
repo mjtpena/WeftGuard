@@ -11,7 +11,8 @@
 - Deployment preflight checks for missing dependencies, hardcoded environment IDs, unresolved variables, production drift signals, and unsupported item types.
 - VS Code Problems integration for release-blocking findings.
 - Fabric release map tree view and polished dashboard webview.
-- CI/CD starter generator for GitHub Actions.
+- Headless CI preflight CLI for GitHub Actions and Azure DevOps.
+- CI/CD starter generator for GitHub Actions and Azure Pipelines.
 - Release report export in Markdown and JSON.
 
 ## What it does
@@ -23,6 +24,24 @@ WeftGuard turns a local Fabric project folder into a release-readiness view:
 3. It infers dependency edges from explicit dependency metadata, GUID-like environment references, semantic model bindings, and `${VariableName}` references.
 4. It runs preflight rules for missing referenced items, hardcoded environment IDs, unresolved variables, direct-production-edit signals, and unknown item types.
 5. It publishes findings to the VS Code Problems panel, renders a dashboard, and exports Markdown/JSON release reports for pull requests or change reviews.
+
+## CI/CD usage
+
+Yes: WeftGuard can run in GitHub Actions and Azure DevOps pipelines without opening VS Code.
+
+For a Fabric repository, install WeftGuard from GitHub and run the headless preflight CLI:
+
+```powershell
+npm install --no-save github:mjtpena/WeftGuard
+npx weftguard preflight --project . --out weftguard-reports --fail-on error --format markdown,json
+```
+
+Pipeline templates are included in:
+
+- [`templates/github/weftguard-preflight.yml`](templates/github/weftguard-preflight.yml)
+- [`templates/azure-pipelines/weftguard-preflight.yml`](templates/azure-pipelines/weftguard-preflight.yml)
+
+The VS Code command `WeftGuard: Generate CI/CD Pipeline` also writes GitHub Actions and Azure DevOps starter files into the current workspace.
 
 ## Evidence
 
@@ -50,6 +69,7 @@ code --install-extension .\weftguard-0.1.0.vsix
 npm run build
 npm run test:vscode
 npm run package
+npm run preflight -- --project examples/demo-fabric-production --out weftguard-reports --fail-on never
 ```
 
 ## Usage
