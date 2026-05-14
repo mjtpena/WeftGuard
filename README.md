@@ -2,7 +2,7 @@
 
 **WeftGuard** is a VS Code extension for Microsoft Fabric teams who need code-first release confidence: dependency graphs, deployment preflight checks, environment drift detection, CI/CD scaffolding, and release evidence before changes hit production.
 
-![WeftGuard dashboard demo](docs/screenshots/weftguard-dashboard-demo.png)
+![Live WeftGuard dashboard running in VS Code](docs/screenshots/weftguard-live-vscode.png)
 
 ## Features
 
@@ -26,7 +26,7 @@ WeftGuard turns a local Fabric project folder into a release-readiness view:
 
 ## Evidence
 
-The demo screenshot above was generated from a sample Fabric project containing a report with:
+The live VS Code screenshot above was captured from the WeftGuard extension running against a sample Fabric project containing a report with:
 
 - a missing semantic model dependency,
 - a GUID-like environment reference,
@@ -34,7 +34,7 @@ The demo screenshot above was generated from a sample Fabric project containing 
 
 The generated report is checked in at [`docs/evidence/release-report-demo.md`](docs/evidence/release-report-demo.md). The same behavior is covered by unit tests in `tests/core`.
 
-Live extension-host verification is covered by `npm run test:vscode`. That test launches VS Code/Electron, activates WeftGuard, runs the scan/preflight/export/workflow commands against `examples/demo-fabric-production`, and verifies the generated release report and CI/CD workflow files.
+Live extension-host verification is covered by `npm run test:vscode`. That test launches VS Code/Electron, activates WeftGuard, runs the scan/preflight/export/workflow commands against `examples/demo-fabric-production`, opens the dashboard, and verifies the generated release report and CI/CD workflow files.
 
 ## Installation
 
