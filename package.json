@@ -160,7 +160,9 @@
     "clean": "rimraf out coverage *.vsix",
     "compile": "tsc -p ./",
     "lint": "eslint \"src/**/*.ts\" \"tests/**/*.ts\"",
-    "test": "vitest run",
+    "test": "vitest run tests/core",
+    "test:vscode": "node ./tests/vscode/runTest.js",
+    "verify": "npm run build && npm run test:vscode && npm run package",
     "build": "npm run compile && npm run lint && npm run test",
     "package": "vsce package --no-dependencies",
     "publish": "vsce publish --packagePath weftguard-0.1.0.vsix"
@@ -170,11 +172,11 @@
     "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "7.16.1",
     "@typescript-eslint/parser": "7.16.1",
+    "@vscode/test-electron": "^2.5.2",
     "@vscode/vsce": "^3.2.2",
     "eslint": "8.57.0",
     "rimraf": "^6.0.1",
     "typescript": "5.5.4",
     "vitest": "4.1.6"
-  },
-  "dependencies": {}
+  }
 }

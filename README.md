@@ -34,12 +34,22 @@ The demo screenshot above was generated from a sample Fabric project containing 
 
 The generated report is checked in at [`docs/evidence/release-report-demo.md`](docs/evidence/release-report-demo.md). The same behavior is covered by unit tests in `tests/core`.
 
+Live extension-host verification is covered by `npm run test:vscode`. That test launches VS Code/Electron, activates WeftGuard, runs the scan/preflight/export/workflow commands against `examples/demo-fabric-production`, and verifies the generated release report and CI/CD workflow files.
+
 ## Installation
 
 Install from the VS Code Marketplace once published, or install the packaged `.vsix` locally with:
 
 ```powershell
 code --install-extension .\weftguard-0.1.0.vsix
+```
+
+## Validation
+
+```powershell
+npm run build
+npm run test:vscode
+npm run package
 ```
 
 ## Usage
